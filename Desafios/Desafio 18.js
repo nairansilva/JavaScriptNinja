@@ -37,13 +37,19 @@
     console.log('\nFormatando CPFs corretamente:');
     // ?
 
-    var regexNum = /(\d\d\d)(\d\d\d)(\d\d\d)(\d\d)/;
+    var regexNum = /(\d{3})(\d{3})(\d{3})(\d{2})/;// ou /(\d\d\d)(\d\d\d)(\d\d\d)(\d\d)/;
 
+    for (var i = 0; i < totalCpf.length; i++) {
+        totalCpf[i] = totalCpf[i].replace(regexNum, "$1.$2.$3-$4")
+}
+    
+    /*ou 
     for (var i = 0; i < totalCpf.length; i++) {
             var resultMatch = totalCpf[i].match(regexNum) 
             totalCpf[i] = resultMatch[1] + '.' + resultMatch[2] + '.' + resultMatch[3] + '-' + resultMatch[4]
     }
-
+    */
+    
     console.log(totalCpf)
     /*
     Crie uma expressão regular que faça match com as palavras "junho" ou "julho",
@@ -59,7 +65,7 @@
     console.log('\nMatch com as palavras "junho" ou "julho" para a frase "Os meses de janeiro, junho e julho começam com a letra j.":');
     // ?
 
-    var regexMes = /(\j\u\w\w\w)/g
+    var regexMes = /(\j\u\w\w\w)/g // ou /ju(n|l)ho/g 
 
     console.log("Os meses de janeiro, junho e julho começam com a letra j.".match(regexMes))
     /*
