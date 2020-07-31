@@ -44,6 +44,11 @@
         $buttonZerar.addEventListener(('click'), () => { $visor.value = 0}, false)
     
         $buttonIgual.addEventListener(('click'), ()=>{
+            var regexOperadores = /[*\-+\/]$/g
+            var operadorNoFinal = regexOperadores.test($visor.value)
+
+            if (operadorNoFinal.test($visor.value))
+                removeUltimoDigitoNoVisor()
             defineOperacao('*');
             defineOperacao('/');
             defineOperacao('+');
