@@ -24,7 +24,77 @@
     - Ao pressionar o botão "CE", o input deve ficar zerado.
     */
 
-    var $botoesCalculadora = doc.querySelectorAll['[data-js"buttonCalc"]']
-    console.log($botoesCalculadora)
+    var $visor = doc.querySelector('[data-js="visor"]');
+    var $botoesCalculadora = doc.querySelectorAll('[data-js="buttonNumeros"]');
+    var $botoesOperadores = doc.querySelectorAll('[data-js="buttonOperadores"]');
+    var $buttonZerar = doc.querySelector('[data-js="buttonZerar"]');
+    var $buttonIgual = doc.querySelector('[data-js="buttonIgual"]');
+
+    (function defineClicks(){
+        $botoesCalculadora.forEach((botaoSelecionado) =>{
+            botaoSelecionado.addEventListener(('click'), () => {validaDigito(botaoSelecionado.value)},false)
+        })
+    
+        $botoesOperadores.forEach((botaoSelecionado) =>{
+            botaoSelecionado.addEventListener(('click'), () => {
+                validaDigito(botaoSelecionado.value)
+            },false)
+        })
+    
+        $buttonZerar.addEventListener(('click'), () => { $visor.value = 0}, false)
+    
+        $buttonIgual.addEventListener(('click'), ()=>{
+            defineOperacao('*');
+            defineOperacao('/');
+            defineOperacao('+');
+            defineOperacao('-');
+        },false);        
+    })()
+
+    function validaDigito(valorDoBotao){
+        var regexOperadores = /[*\-+\/]$/g
+        var digitoOperador = regexOperadores.test(valorDoBotao)
+        var operadorNoFinal = regexOperadores.test($visor.value)
+
+        if ((!operadorNoFinal || (operadorNoFinal && !digitoOperador)) && ($visor.value !== '0'))
+            adicionaDadosNoVisor(valorDoBotao);
+        else {
+            removeUltimoDigitoNoVisor()
+            adicionaDadosNoVisor(valorDoBotao);   
+        }
+    }
+
+    function adicionaDadosNoVisor(valorDoBotao){
+        $visor.value += valorDoBotao;
+    }
+
+    function removeUltimoDigitoNoVisor(){
+        $visor.value = $visor.value.substring(0, $visor.value.length-1);
+    }
+
+    function defineOperacao(operador){
+        var regex = new RegExp('((\\d+)\\' + operador + '(\\d+))','g') ///((\d+)\operador(\d+))/g
+        var operacoes = $visor.value.match(regex)
+        var resultado = 0
+        var indiceOperador = 0
+
+        while( $visor.value.match(regex) !== null){
+            operacoes = $visor.value.match(regex)[0]
+            indiceOperador = operacoes.indexOf(operador)
+            resultado = realizaCalculo(operacoes.substring(0,indiceOperador), operacoes.substring(indiceOperador + 1, operacoes.length), operador)  
+            $visor.value = $visor.value.replace(operacoes, resultado)
+        }
+    }
+
+    function realizaCalculo(numero1, numero2, operador){
+        if (operador === '*')
+            return Number(numero1) * Number(numero2)
+        if (operador === '/')
+            return parseInt(Number(numero1) / Number(numero2))
+        if (operador === '-')
+            return Number(numero1) - Number(numero2)
+        if (operador === '+')
+            return Number(numero1) + Number(numero2)
+    }
 
 })(document)
