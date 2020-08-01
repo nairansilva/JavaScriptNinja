@@ -49,10 +49,10 @@
 
             if (operadorNoFinal.test($visor.value))
                 removeUltimoDigitoNoVisor()
-            defineOperacao('*');
-            defineOperacao('/');
-            defineOperacao('+');
-            defineOperacao('-');
+                defineOperacao('*');
+                defineOperacao('/');
+                defineOperacao('+');
+                defineOperacao('-');
         },false);        
     })()
 
