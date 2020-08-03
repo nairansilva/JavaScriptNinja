@@ -40,7 +40,7 @@
 
     $mensagem.removeAttribute("hidden")
     event.preventDefault();
-    ajax.open('GET', `https://ws.apicep.com/cep.json?code=13211100`) //independente do CEP, o retorno é 500...
+    ajax.open('GET', `https://ws.apicep.com/cep/${$cep.value.replace(regex, '')}.json`)
     ajax.send();
     ajax.addEventListener('readystatechange', handleStateChange);
   }, false)
@@ -48,14 +48,22 @@
   function handleStateChange() {
     if (isRequestOk()) {
       if (ajax.status === 200)
-        $mensagem.innerHTML = "Dados Encontrados com Sucesso";
+        atualizaFormulario()
       else
         $mensagem.innerHTML = "Erro ao consultar o CEP. Código do erro: " + ajax.status;
     }
   }
 
+  function atualizaFormulario(){
+    var retornoCep = JSON.parse(ajax.responseText)
+
+    $logradouro.value = retornoCep.address;
+    $bairro.value = retornoCep.district;
+    $cidade.value = retornoCep.city;
+    $mensagem.innerHTML = "Dados Encontrados com Sucesso";
+  }
+
   function isRequestOk() {
-    console.log(ajax.readyState)
     return ajax.readyState === 4;
   }
 
