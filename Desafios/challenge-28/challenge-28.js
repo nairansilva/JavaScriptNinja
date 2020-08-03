@@ -1,3 +1,5 @@
+(function (doc) {
+  'use strict';
   /*
   No HTML:
   - Crie um formulário com um input de texto que receberá um CEP e um botão
@@ -25,3 +27,36 @@
   - Utilize a lib DOM criada anteriormente para facilitar a manipulação e
   adicionar as informações em tela.
   */
+  var $cep = doc.querySelector('[data-js="cep"]');
+  var $logradouro = doc.querySelector('[data-js="logradouro"]');
+  var $bairro = doc.querySelector('[data-js="bairro"]');
+  var $cidade = doc.querySelector('[data-js="cidade"]');
+  var $buscarDados = doc.querySelector('[data-js="buscarDados"]');
+  var $mensagem = doc.querySelector('[data-js="mensagem"]');
+  var ajax = new XMLHttpRequest();
+
+  $buscarDados.addEventListener('click', (event) => {
+    var regex = /(\D+)/g;
+
+    $mensagem.removeAttribute("hidden")
+    event.preventDefault();
+    ajax.open('GET', `https://ws.apicep.com/cep.json?code=13211100`) //independente do CEP, o retorno é 500...
+    ajax.send();
+    ajax.addEventListener('readystatechange', handleStateChange);
+  }, false)
+
+  function handleStateChange() {
+    if (isRequestOk()) {
+      if (ajax.status === 200)
+        $mensagem.innerHTML = "Dados Encontrados com Sucesso";
+      else
+        $mensagem.innerHTML = "Erro ao consultar o CEP. Código do erro: " + ajax.status;
+    }
+  }
+
+  function isRequestOk() {
+    console.log(ajax.readyState)
+    return ajax.readyState === 4;
+  }
+
+})(document)
