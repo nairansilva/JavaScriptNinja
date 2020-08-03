@@ -36,19 +36,19 @@
   que será nomeado de "app".
   */
 
-
-  var ajax = new XMLHttpRequest();
-  var $nomeEmpresa = new DOM('[data-js="nomeEmpresa"]')
-  var $telefoneEmpresa = new DOM('[data-js="telefoneEmpresa"]')
-  var $imagemCarro = new DOM('[data-js="imagemCarro"]')
-  var $marcaModelo = new DOM('[data-js="marcaModelo"]')
-  var $ano = new DOM('[data-js="ano"]')
-  var $placa = new DOM('[data-js="placa"]')
-  var $cod = new DOM('[data-js="cod"]')
-  var $enviar = new DOM('[data-js="enviar"]')
-  var $tabelaCarros = new DOM('[data-js="tabelaCarros"]')
-
   function appCarros() {
+
+    var ajax = new XMLHttpRequest();
+    var $nomeEmpresa = new DOM('[data-js="nomeEmpresa"]')
+    var $telefoneEmpresa = new DOM('[data-js="telefoneEmpresa"]')
+    var $imagemCarro = new DOM('[data-js="imagemCarro"]')
+    var $marcaModelo = new DOM('[data-js="marcaModelo"]')
+    var $ano = new DOM('[data-js="ano"]')
+    var $placa = new DOM('[data-js="placa"]')
+    var $cod = new DOM('[data-js="cod"]')
+    var $enviar = new DOM('[data-js="enviar"]')
+    var $tabelaCarros = new DOM('[data-js="tabelaCarros"]')
+    
     return {
       init: function () {
         ajax.open('GET', '/company.json')
