@@ -1,4 +1,4 @@
-(function(doc) {
+(function (win, doc) {
   'use strict';
 
   /*
@@ -36,41 +36,87 @@
   que será nomeado de "app".
   */
 
+
   var ajax = new XMLHttpRequest();
-  var $nomeEmpresa = doc.querySelector('[data-js="nomeEmpresa"]')
-  var $telefoneEmpresa = doc.querySelector('[data-js="telefoneEmpresa"]')
-  var $tabelaCarros = doc.querySelector('[data-js="tabelaCarros"]')
+  var $nomeEmpresa = new DOM('[data-js="nomeEmpresa"]')
+  var $telefoneEmpresa = new DOM('[data-js="telefoneEmpresa"]')
+  var $imagemCarro = new DOM('[data-js="imagemCarro"]')
+  var $marcaModelo = new DOM('[data-js="marcaModelo"]')
+  var $ano = new DOM('[data-js="ano"]')
+  var $placa = new DOM('[data-js="placa"]')
+  var $cod = new DOM('[data-js="cod"]')
+  var $enviar = new DOM('[data-js="enviar"]')
+  var $tabelaCarros = new DOM('[data-js="tabelaCarros"]')
 
-  var HTMLtr = doc.createElement('tr');
-  var HTMLtd = doc.createElement('td');
+  function appCarros() {
+    return {
+      init: function () {
+        ajax.open('GET', '/company.json')
+        ajax.send();
+        ajax.addEventListener('readystatechange', handleStateChange);
 
-  HTMLtd.textContent='teste'
-  HTMLtr.appendChild(HTMLtd);
+        function handleStateChange() {
+          if (requisicaoOK()) {
+            let respostaRequisicao = JSON.parse(ajax.responseText)
 
-  HTMLtd = doc.createElement('td');
-  HTMLtd.textContent='teste2'
-  HTMLtr.appendChild(HTMLtd);
+            $nomeEmpresa.get()[0].textContent += respostaRequisicao.name
+            $telefoneEmpresa.get()[0].textContent += respostaRequisicao.phone
+          }
+        }
 
-  console.log(HTMLtr)
+        function requisicaoOK() {
+          return ajax.readyState === 4;
+        }
+      },
 
-  $tabelaCarros.appendChild(HTMLtr)
+      adicionaEventos: function () {
+        $enviar.get()[0].addEventListener('click', adicionaCarros, false)
 
+        function adicionaCarros(event) {
+          event.preventDefault();
+          $tabelaCarros.get()[0].appendChild(adicionaCarro())
+          limpaInput()
+        }
 
-  ajax.open('GET', '/company.json')
-  ajax.send();
-  ajax.addEventListener('readystatechange', handleStateChange);
+        function adicionaCarro(){
+          let fragment = doc.createDocumentFragment()
+          let HTMLtr = {tagTr: doc.createElement('tr')};   
+          let tdImagem = doc.createElement('td');
+          let imgLinha = doc.createElement('img')
 
-  function handleStateChange(){
-    if (requisicaoOK()){
-      let respostaRequisicao = JSON.parse(ajax.responseText)
-      
-      $nomeEmpresa.textContent += respostaRequisicao.name
-      $telefoneEmpresa.textContent += respostaRequisicao.phone
+          imgLinha.setAttribute('src', $imagemCarro.get()[0].value)
+          tdImagem.appendChild(imgLinha)
+          HTMLtr.tagTr.appendChild(imgLinha);
+
+          adicionaLinha(HTMLtr, $marcaModelo.get()[0].value);
+          adicionaLinha(HTMLtr, $ano.get()[0].value);
+          adicionaLinha(HTMLtr, $placa.get()[0].value);
+          adicionaLinha(HTMLtr, $cod.get()[0].value);
+
+          fragment.appendChild(HTMLtr.tagTr)
+          return fragment 
+        }
+
+        function adicionaLinha(HTMLtr, valorTd){
+          let tdCarro = doc.createElement('td');
+          
+          tdCarro.textContent = valorTd;
+          return HTMLtr.tagTr.appendChild(tdCarro);
+        }
+
+        function limpaInput(){
+          $imagemCarro.get()[0].value = ""
+          $marcaModelo.get()[0].value = ""
+          $ano.get()[0].value = ""
+          $placa.get()[0].value = ""
+          $cod.get()[0].value = ""
+        }
+      }
     }
   }
 
+  var carros = appCarros();
+  carros.init();
+  carros.adicionaEventos();
 
-  function requisicaoOK(){
-    return ajax.readyState === 4;
-  }
-})(document);
+})(window, document);
