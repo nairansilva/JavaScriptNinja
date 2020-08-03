@@ -36,4 +36,14 @@
   que será nomeado de "app".
   */
 
+  var ajax = new XMLHttpRequest();
+
+  ajax.open('GET', '/company.json')
+  ajax.send();
+  ajax.addEventListener('readystatechange', handleStateChange);
+
+  function handleStateChange(){
+    console.log(ajax.readyState)
+  }
+
 })();
