@@ -1,4 +1,4 @@
-(function() {
+(function(doc) {
   'use strict';
 
   /*
@@ -37,13 +37,40 @@
   */
 
   var ajax = new XMLHttpRequest();
+  var $nomeEmpresa = doc.querySelector('[data-js="nomeEmpresa"]')
+  var $telefoneEmpresa = doc.querySelector('[data-js="telefoneEmpresa"]')
+  var $tabelaCarros = doc.querySelector('[data-js="tabelaCarros"]')
+
+  var HTMLtr = doc.createElement('tr');
+  var HTMLtd = doc.createElement('td');
+
+  HTMLtd.textContent='teste'
+  HTMLtr.appendChild(HTMLtd);
+
+  HTMLtd = doc.createElement('td');
+  HTMLtd.textContent='teste2'
+  HTMLtr.appendChild(HTMLtd);
+
+  console.log(HTMLtr)
+
+  $tabelaCarros.appendChild(HTMLtr)
+
 
   ajax.open('GET', '/company.json')
   ajax.send();
   ajax.addEventListener('readystatechange', handleStateChange);
 
   function handleStateChange(){
-    console.log(ajax.readyState)
+    if (requisicaoOK()){
+      let respostaRequisicao = JSON.parse(ajax.responseText)
+      
+      $nomeEmpresa.textContent += respostaRequisicao.name
+      $telefoneEmpresa.textContent += respostaRequisicao.phone
+    }
   }
 
-})();
+
+  function requisicaoOK(){
+    return ajax.readyState === 4;
+  }
+})(document);
